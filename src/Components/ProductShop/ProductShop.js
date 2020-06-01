@@ -3,12 +3,14 @@ import ProductItem from "../ProductItem/ProductItem";
 import './ProductShop.css'
 import noImage from "../../icons/not-found.png";
 import settings from '../../settings'
+import Spinner from "../Spinner/Spinner";
+import {Link} from "react-router-dom";
 
 export default class ProductShop extends React.Component {
     constructor(props) {
         super(props);
         const tempArray = []
-        for (let i = 0; i < 30; i++){
+        for (let i = 0; i < 30; i++) {
             tempArray.push(i)
         }
         this.state = {
@@ -23,7 +25,7 @@ export default class ProductShop extends React.Component {
     }
 
     updateDimensions = () => {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
+        this.setState({width: window.innerWidth, height: window.innerHeight});
         this.alignData()
     };
 
@@ -49,8 +51,7 @@ export default class ProductShop extends React.Component {
                 tempArray: tempArray,
                 itemWidth: this.productItemRef.current.offsetWidth
             })
-        }
-        else {
+        } else {
             const tempArray = []
             for (let i = 0; i < 30; i++) {
                 tempArray.push(i)
@@ -83,6 +84,7 @@ export default class ProductShop extends React.Component {
                 paddingRight: '10px',
                 paddingLeft: '20px',
             }}>
+                {this.props.loading ? <div style={{}}><Spinner/></div> : <>
                     <div className={'view-horizontal-title'}
                          style={{marginBottom: '15px'}}>Товары
                     </div>
@@ -90,10 +92,13 @@ export default class ProductShop extends React.Component {
                     <div className={'product-shop-list'} ref={this.productListRef}>
                         {
                             this.props.items.map((elem, index) => {
-                                return <div style={{marginBottom: '15px',}} ref={this.productItemRef}><ProductItem
-                                    imageUrl={elem.photo ? elem.photo : noImage}>
-                                    <div>{elem.name}</div>
-                                </ProductItem></div>
+                                return <div style={{marginBottom: '15px',}}
+                                            ref={this.productItemRef} onClick={() => this.props.setCurrentId(elem.id)}>
+                                        <ProductItem
+                                            imageUrl={elem.photo ? elem.photo : noImage}>
+                                            <div>{elem.name}</div>
+                                        </ProductItem>
+                                </div>
                             })
                         }
                         {
@@ -102,7 +107,9 @@ export default class ProductShop extends React.Component {
                             })
                         }
                     </div>
-                {this.props.children}
+                    {this.props.children}
+                </>
+                }
             </div>
         )
     }

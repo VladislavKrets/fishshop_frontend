@@ -1,9 +1,14 @@
 .view{
 
 }
+.mobile{
+    display: none;
+}
 @media (max-width: 500px) {
     .view{
-        padding-top: 53px;
-        padding-bottom: 52px;
+        box-sizing: border-box;
+    }
+    .mobile{
+        display: block;
     }
 }

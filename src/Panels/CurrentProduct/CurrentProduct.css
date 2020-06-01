@@ -1,0 +1,30 @@
+.prod-description{
+    display: flex;
+    padding: 40px 12px;
+}
+.product-photo.current-product{
+    margin: 0;
+    padding-left: 50px;
+}
+@media (max-width: 500px) {
+    .prod-description{
+        display: block;
+        padding: 0 5px
+    }
+    .product-photo.current-product{
+        display: flex;
+        justify-content: center;
+        padding-left: 0;
+        width: 100%;
+    }
+    .current-product-view-item{
+        box-sizing: border-box;
+        transform-origin: top left;
+        animation: panel 500ms ease-in-out;
+        animation-fill-mode:forwards;
+    }
+}
+@keyframes panel {
+    0% { transform: scaleX(0);}
+    100% { transform: scaleX(1); }
+}

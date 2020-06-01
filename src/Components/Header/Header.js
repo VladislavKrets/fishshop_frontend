@@ -7,8 +7,9 @@ export default class Header extends React.Component{
     }
 
     render() {
+        const style = this.props.style ? this.props.style : {};
         return (
-            <div className={'view-header'}>
+            <div style={{...style}} className={'view-header'}>
                 {this.props.title}
             </div>
         )

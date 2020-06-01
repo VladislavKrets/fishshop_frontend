@@ -9,6 +9,8 @@ import MobileSearchTopic from "../../Components/MobileSearchTopic/MobileSearchTo
 import addIcon from '../../icons/add_icon.svg'
 import axios from '../../api'
 import Spinner from "../../Components/Spinner/Spinner";
+import CurrentProduct from "../CurrentProduct/CurrentProduct";
+import backArrow from '../../icons/back-arrow.svg'
 
 export default class Products extends React.Component {
     constructor(props) {
@@ -20,13 +22,25 @@ export default class Products extends React.Component {
             mobileSearch: null,
             historyProd: [],
             loading: true,
+            shopLoading: false,
             selectedTopics: [],
             items: [],
             next: null,
             previous: null,
             count: 0,
             searchProductName: '',
+            page: 1,
+            currentId: null
         }
+    }
+
+    setCurrentId = (id) => {
+        if (id !== null){
+            window.history.pushState({}, 'product', `/products/${id}/`)
+        }
+        this.setState({
+            currentId: id
+        })
     }
 
     addMobileSearch = (mobileSearch) => {
@@ -43,6 +57,7 @@ export default class Products extends React.Component {
         this.setState({
             searchProductName: name
         })
+        this.sendSearchRequest(name)
     }
 
     onCloseMobileSearch = () => {
@@ -58,6 +73,7 @@ export default class Products extends React.Component {
         this.setState({
             topics: topics,
         })
+        this.sendSearchRequest()
     }
 
     switchMobileTopicNext = (e) => {
@@ -67,6 +83,7 @@ export default class Products extends React.Component {
         this.setState({
             topics: topics,
         })
+        this.sendSearchRequest()
     }
 
     getMobileTopic = (topic_id, topics, prevTopic, next) => {
@@ -102,6 +119,7 @@ export default class Products extends React.Component {
         if (this.state.historyProd.length !== 0) {
             this.generateSearchMobile(topics[0].children, this.state.historyProd.length - 1, topics[0])
         }
+        this.getProducts(null, '')
     }
 
     resetMobileTopic = (topics) => {
@@ -113,9 +131,34 @@ export default class Products extends React.Component {
         }
     }
 
+    sendSearchRequest = (prodName) => {
+        this.getProducts(null, prodName)
+    }
+
+    findAllIds = (ids, topics) => {
+        topics.forEach((elem, index) => {
+            if (elem.checked) {
+                ids.push(elem.id);
+                if (elem.children) {
+                    this.addAllChildrenIds(ids, elem.children)
+                }
+            } else {
+                if (elem.children)
+                    this.findAllIds(ids, elem.children)
+            }
+        })
+    }
+
+    addAllChildrenIds = (ids, topics) => {
+        topics.forEach((elem, index) => {
+            ids.push(elem.id);
+            if (elem.children) {
+                this.addAllChildrenIds(ids, elem.children)
+            }
+        })
+    }
+
     generateSearchMobile = (topics, key, prevElem) => {
-        console.log(key)
-        console.log(this.state.historyProd.length)
         const mobileSearch = <MobileSearchTopic
             key={key || key === 0 ? key : this.state.historyProd.length}
             reset={this.reset}
@@ -181,19 +224,34 @@ export default class Products extends React.Component {
         }
     }
 
-    getProducts = (url) => {
+    getProducts = (url, prodName) => {
         this.setState({
-            loading: true
+            shopLoading: true
         })
-        axios.get(url ? url : '/items/', {
-            headers: {}
+        let selectedIds = []
+        this.findAllIds(selectedIds, this.state.topics)
+        let name = this.state.searchProductName;
+        if (prodName !== null && prodName !== undefined) name = prodName;
+        const data = {}
+        if (selectedIds.length > 0) {
+            data['topic_id__in'] = selectedIds
+        }
+        if (name) {
+            data['name__icontains'] = name
+        }
+        axios.post(url ? url : '/items/', data, {
+            headers: {},
         }).then(data => {
+            const page = !data.data.previous ? 1 :
+                !data.data.next ? parseInt(data.data.previous.split('=')[1]) + 1
+                    : parseInt(data.data.next.split('=')[1]) - 1
             this.setState({
                 items: data.data.results,
                 next: data.data.next,
                 previous: data.data.previous,
                 count: data.data.count,
-                loading: false
+                shopLoading: false,
+                page: page
             })
         })
     }
@@ -203,7 +261,9 @@ export default class Products extends React.Component {
             headers: {}
         }).then(data => {
             this.setState({
-                topics: data.data
+                topics: data.data,
+                loading: false,
+                shopLoading: true,
             })
             this.getProducts();
         })
@@ -212,54 +272,58 @@ export default class Products extends React.Component {
     render() {
         console.log(this.state.selectedTopics)
         return (
-            <View current={'products'} title={'Продукты'}>
-                {this.state.loading ? <Spinner/> : <>
-                    <div className={'mobile-search-categories'} style={{
-                        position: 'fixed',
-                        top: '53px',
-                        left: '0',
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        borderBottom: '1px solid cornflowerblue',
-                        backgroundColor: 'white',
-                    }}>
-                        <Search placeholder={'Введите название продукта'}
-                                value={this.state.searchProductName} style={{height: '40px'}}
-                                onChange={this.handleSearchChange}/>
-                        <div style={{padding: '0 5px'}} onClick={() => {
-                            this.generateSearchMobile(this.state.topics[0].children, null, this.state.topics[0])
-                        }}><img
-                            src={searchSettings}
-                            style={{width: '28px', height: '28px'}}/>
-                        </div>
-                    </div>
-                    <div style={{display: 'flex', paddingTop: '15px'}}>
-                        <LeftTopicBar>
-                            <Search placeholder={'Введите название продукта'}
-                                    value={this.state.searchProductName}
+            !this.state.currentId ?
+                <View current={'products'} title={'Товары'}>
+                    {this.state.loading ? <Spinner/> : <>
+                        <div className={'mobile-search-categories'} style={{
+                            position: 'fixed',
+                            top: '53px',
+                            left: '0',
+                            width: '100%',
+                            boxSizing: 'border-box',
+                            borderBottom: '1px solid cornflowerblue',
+                            backgroundColor: 'white',
+                        }}>
+                            <Search placeholder={'Введите название товара'}
+                                    value={this.state.searchProductName} style={{height: '40px'}}
                                     onChange={this.handleSearchChange}/>
-                            <div style={{textAlign: 'center', color: 'white', padding: '5px'}}>
+                            <div style={{padding: '0 5px'}} onClick={() => {
+                                this.generateSearchMobile(this.state.topics[0].children, null, this.state.topics[0])
+                            }}><img
+                                src={searchSettings}
+                                style={{width: '28px', height: '28px'}}/>
+                            </div>
+                        </div>
+                        <div style={{display: 'flex', paddingTop: '15px'}}>
+                            <LeftTopicBar>
+                                <Search placeholder={'Введите название товара'}
+                                        value={this.state.searchProductName}
+                                        onChange={this.handleSearchChange}/>
+                                <div style={{textAlign: 'center', color: 'white', padding: '5px'}}>
                                 <span style={{
                                     borderBottom: '1px solid white',
                                     cursor: 'pointer'
                                 }} onClick={this.reset}>Сбросить</span>
-                            </div>
-                            <LeftTopicBarItem switchMobileTopic={this.switchMobileTopic}
-                                              switchMobileTopicNext={this.switchMobileTopicNext}
-                                              checked={this.state.topics[0].checked}
-                                              items={this.state.topics[0].children} marginLeft={0}
-                                              id={this.state.topics[0].id}
-                                              name={this.state.topics[0].name}/>
-                        </LeftTopicBar>
-                        <ProductShop items={this.state.items}>
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                color: 'cornflowerblue',
-                                fontSize: '1.2em',
-                                padding: '12px 50px'
-                            }}>
+                                </div>
+                                <LeftTopicBarItem switchMobileTopic={this.switchMobileTopic}
+                                                  switchMobileTopicNext={this.switchMobileTopicNext}
+                                                  checked={this.state.topics[0].checked}
+                                                  items={this.state.topics[0].children}
+                                                  marginLeft={0}
+                                                  id={this.state.topics[0].id}
+                                                  name={this.state.topics[0].name}/>
+                            </LeftTopicBar>
+                            <ProductShop setCurrentId={this.setCurrentId} items={this.state.items}
+                                         loading={this.state.shopLoading}>
+                                {this.state.shopLoading ? <div></div> :
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        color: 'cornflowerblue',
+                                        fontSize: '1.2em',
+                                        padding: '12px 50px'
+                                    }}>
                                 <span
                                     onClick={this.state.previous ? () => {
                                         this.getProducts(this.state.previous)
@@ -269,28 +333,49 @@ export default class Products extends React.Component {
                                         transform: 'scaleX(0.6)',
                                         cursor: 'pointer'
                                     }}>{'<'}</span>
-                                <span>
+                                        <span>
                                     {this.state.next ? parseInt(this.state.next.split('=')[1]) - 1
                                         : this.state.previous ? parseInt(this.state.previous.split('=')[1]) + 1 : 1}
-                                    /
-                                    {Math.ceil(this.state.count / 50)}
+                                            /
+                                            {Math.ceil(this.state.count / 50)}
                                 </span>
-                                <span
-                                    onClick={this.state.next ? () => {
-                                        this.getProducts(this.state.next)
-                                    } : null}
-                                    style={{
-                                        fontSize: '2em',
-                                        transform: 'scaleX(0.6)',
-                                        cursor: 'pointer'
-                                    }}>{'>'}
+                                        <span
+                                            onClick={this.state.next ? () => {
+                                                this.getProducts(this.state.next)
+                                            } : null}
+                                            style={{
+                                                fontSize: '2em',
+                                                transform: 'scaleX(0.6)',
+                                                cursor: 'pointer'
+                                            }}>{'>'}
                                 </span>
-                            </div>
-                        </ProductShop>
+                                    </div>
+                                }
+                            </ProductShop>
+                        </div>
+                        {this.state.mobileSearch}
+                    </>}
+                </View> : <View current={'products'} showEpicBar={false} headerAnimation={true} title={<div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '100%',
+                        fontSize: 'inherit',
+                        font: 'inherit',
+                        fontWeight: 'inherit'
+                    }}>
+                    <div onClick={() => this.setCurrentId(null)} style={{paddingLeft: '12px'}}>
+                        <img src={backArrow} style={{
+                            width: '28px',
+                            height: '28px'
+                        }}/>
                     </div>
-                    {this.state.mobileSearch}
-                </>}
-            </View>
+                    <span>Товар</span>
+                    <div style={{width: '40px'}}/>
+                </div>}>
+                    <CurrentProduct id={this.state.currentId} setCurrentId={this.setCurrentId}/>
+                </View>
         )
     }
 }
