@@ -314,7 +314,8 @@ export default class Products extends React.Component {
                                                   name={this.state.topics[0].name}/>
                             </LeftTopicBar>
                             <ProductShop setCurrentId={this.setCurrentId} items={this.state.items}
-                                         loading={this.state.shopLoading}>
+                                         loading={this.state.shopLoading} selectedItems={this.props.selectedItems}
+                                         changeSelectedItems={this.props.changeSelectedItems}>
                                 {this.state.shopLoading ? <div></div> :
                                     <div style={{
                                         display: 'flex',
@@ -374,7 +375,8 @@ export default class Products extends React.Component {
                     <span>Товар</span>
                     <div style={{width: '40px'}}/>
                 </div>}>
-                    <CurrentProduct id={this.state.currentId} setCurrentId={this.setCurrentId}/>
+                    <CurrentProduct id={this.state.currentId} selectedItems={this.props.selectedItems}
+                                    changeSelectedItems={this.props.changeSelectedItems} setCurrentId={this.setCurrentId}/>
                 </View>
         )
     }

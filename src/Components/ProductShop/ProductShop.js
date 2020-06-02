@@ -5,6 +5,7 @@ import noImage from "../../icons/not-found.png";
 import settings from '../../settings'
 import Spinner from "../Spinner/Spinner";
 import {Link} from "react-router-dom";
+import CurrentProduct from "../../Panels/CurrentProduct/CurrentProduct";
 
 export default class ProductShop extends React.Component {
     constructor(props) {
@@ -95,6 +96,9 @@ export default class ProductShop extends React.Component {
                                 return <div style={{marginBottom: '15px',}}
                                             ref={this.productItemRef} onClick={() => this.props.setCurrentId(elem.id)}>
                                         <ProductItem
+                                            currentId={elem.id}
+                                            selectedItems={this.props.selectedItems}
+                                            changeSelectedItems={this.props.changeSelectedItems}
                                             imageUrl={elem.photo ? elem.photo : noImage}>
                                             <div>{elem.name}</div>
                                         </ProductItem>

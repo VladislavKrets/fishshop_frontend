@@ -37,7 +37,11 @@ export default class Main extends React.Component {
                 <HorizontalScroll title={'Товары недели'} id={'container1'}>
                     {
                         this.state.array.map((elem, index) => {
-                            return <ProductItem imageUrl={'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg'}>
+                            return <ProductItem
+                                currentId={1}
+                                selectedItems={this.props.selectedItems}
+                                changeSelectedItems={this.props.changeSelectedItems}
+                                imageUrl={'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg'}>
                                 <div>Продукт {index + 1}</div>
                             </ProductItem>
                         })
@@ -51,7 +55,11 @@ export default class Main extends React.Component {
                 <HorizontalScroll title={'Акции'} id={'container2'}>
                     {
                         this.state.array.map((elem, index) => {
-                            return <ProductItem imageUrl={'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg'}>
+                            return <ProductItem
+                                currentId={2}
+                                selectedItems={this.props.selectedItems}
+                                changeSelectedItems={this.props.changeSelectedItems}
+                                imageUrl={'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg'}>
                                 Продукт {index + 1} fefefeferfefdddwd
                             </ProductItem>
                         })

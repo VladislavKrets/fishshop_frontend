@@ -3,6 +3,7 @@ import axios from '../../api'
 import Spinner from "../../Components/Spinner/Spinner";
 import notFound from '../../icons/not-found.png'
 import './CurrentProduct.css'
+import trashIcon from '../../icons/trash.svg'
 
 export default class CurrentProduct extends React.Component {
     constructor(props) {
@@ -26,14 +27,30 @@ export default class CurrentProduct extends React.Component {
                 product: data.data,
                 loading: false
             })
-            console.log(data.data)
         })
+    }
+
+    addToBasket = () => {
+        const selectedItems = this.props.selectedItems;
+        selectedItems.push({id: this.props.id, count: 1});
+        this.props.changeSelectedItems(selectedItems);
+    }
+
+    removeFromBasket = () => {
+        let selectedItems = this.props.selectedItems;
+        selectedItems = selectedItems.filter(x => x.id !== this.props.id)
+        this.props.changeSelectedItems(selectedItems);
     }
 
     render() {
         return (
             this.state.loading ? <Spinner/> :
                 <div style={{paddingTop: '10px'}} className={'current-product-view-item'}>
+                    <div className={'back-desktop'} onClick={() => this.props.setCurrentId(null)}>
+                        <span style={{
+                            transform: 'scaleX(0.6)',
+                        }}>{'<'}</span><span> Назад</span>
+                    </div>
                     <div style={{
                         paddingTop: '10px',
                         paddingBottom: '10px',
@@ -44,10 +61,58 @@ export default class CurrentProduct extends React.Component {
                     }}>{this.state.product.name}
                     </div>
                     <div className={'prod-description'}>
+
                         <div className={'product-photo current-product'}>
                             <img className={'photo'}
                                  style={{width: '300px', height: '300px', borderRadius: '50%'}}
                                  src={this.state.product.photo ? this.state.product.photo : notFound}/>
+                            {this.props.selectedItems.map(x => x.id).includes(this.props.id) ?
+                                <div style={{padding: '10px 0', display: 'flex', justifyContent: 'center'}}>
+                                    <div onClick={e => {
+                                        e.stopPropagation();
+                                        this.removeFromBasket();
+                                    }} style={{
+                                        backgroundColor: 'red',
+                                        padding: '10px 10px',
+                                        borderRadius: '5px',
+                                        color: 'white',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        width: '190px',
+                                        cursor: 'pointer'
+                                    }}>
+                                        <img src={trashIcon}
+                                             style={{width: '22px', height: '22px'}}/>
+                                        <div style={{
+                                            lineHeight: '25px',
+                                            paddingLeft: '10px'
+                                        }}>Удалить из корзины
+                                        </div>
+                                    </div>
+                                </div> :
+                                <div style={{padding: '10px 0', display: 'flex', justifyContent: 'center'}}>
+                                    <div onClick={e => {
+                                        e.stopPropagation();
+                                        this.addToBasket();
+                                    }} style={{
+                                        backgroundColor: 'green',
+                                        padding: '10px 10px',
+                                        borderRadius: '5px',
+                                        color: 'white',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        width: '190px',
+                                        cursor: 'pointer'
+                                    }}>
+                                        <span style={{fontSize: '25px',}}>+</span>
+                                        <div style={{
+                                            lineHeight: '25px',
+                                            paddingLeft: '10px'
+                                        }}>Добавить в корзину
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
                         <div style={{flexGrow: '1', padding: '10px 12px', textAlign: 'center'}}>
                             КАКОЕ-ТО ОПИСАНИЕ ЫЫЫЫЫЫЫЫЫ АААААААААААААА

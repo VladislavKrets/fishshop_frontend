@@ -28,9 +28,13 @@ class App extends React.Component {
         return (
             <Router>
                 <Switch>
-                    <Route exact path="/" component={Main}/>
-                    <Route path="/products/:id" component={CurrentProduct}/>
-                    <Route exact path="/products/">
+                    <Route exact path="/">
+                        <Main
+                            selectedItems={this.state.selectedItems}
+                            changeSelectedItems={this.changeSelectedItems}
+                        />
+                    </Route>
+                    <Route path="/products/">
                         <Products key={'products'} selectedItems={this.state.selectedItems}
                                   changeSelectedItems={this.changeSelectedItems}/>
                     </Route>
