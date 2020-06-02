@@ -1,4 +1,5 @@
 import * as React from "react";
+import InfoSection from "../../Components/InfoSection/InfoSection";
 
 export default class ErrorPanel extends React.Component {
     constructor(props) {
@@ -8,7 +9,9 @@ export default class ErrorPanel extends React.Component {
     render() {
         return (
             <div>
-                Ошибка 404
+                <InfoSection>
+                    Ошибка 404
+                </InfoSection>
             </div>
         )
     }

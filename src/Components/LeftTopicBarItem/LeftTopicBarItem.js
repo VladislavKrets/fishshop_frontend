@@ -75,8 +75,8 @@ export default class LeftTopicBarItem extends React.Component {
                         }}>
                             <label style={{
                                 width: '100%', display: 'flex',
-                                justifyContent: 'space-between',
-                            }}>
+                                justifyContent: 'space-between', cursor: 'pointer'
+                            }} onClick={e => e.stopPropagation()}>
                                 <div>Выбрать все</div>
                                 <div><input style={{transform: 'scale(1.5)'}}
                                             checked={!!this.props.checked}
