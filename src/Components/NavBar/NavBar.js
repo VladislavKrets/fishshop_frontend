@@ -9,8 +9,9 @@ export default class NavBar extends React.Component{
 
     render() {
         const {current} = this.props
+        const style = this.props.style ? this.props.style : {};
         return (
-            <div className={'view-navbar'}>
+            <div className={'view-navbar'} style={style} onMouseOver={this.props.onMouseOver} onMouseOut={this.props.onMouseOut}>
                 <ul>
                     <li><Link to={'/'} className={current === 'main' && 'current'}>Главная</Link></li>
                     <li><Link to={'/products/'} className={current === 'products' && 'current'}>Товары</Link></li>

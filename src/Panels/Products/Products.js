@@ -336,7 +336,7 @@ export default class Products extends React.Component {
                                     }}>{'<'}</span>
                                         <span>
                                     {this.state.next ? parseInt(this.state.next.split('=')[1]) - 1
-                                        : this.state.previous ? parseInt(this.state.previous.split('=')[1]) + 1 : 1}
+                                        : Math.ceil(this.state.count / 50)}
                                             /
                                             {Math.ceil(this.state.count / 50)}
                                 </span>

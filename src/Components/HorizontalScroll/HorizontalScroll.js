@@ -18,8 +18,9 @@ export default class HorizontalScroll extends React.Component {
     };
 
     render() {
+        const style = this.props.style ? this.props.style : {};
         return (
-            <div className={'view-horizontal'}>
+            <div className={'view-horizontal'} style={style}>
                 <div className={'view-horizontal-title'}>{this.props.title}</div>
                 <div id={this.props.id} className={'view-horizontal-scroll'} onWheel={this.onWheel}>
                     {this.props.children}

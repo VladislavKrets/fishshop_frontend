@@ -3,6 +3,7 @@
     display: none;
     justify-content: space-between;
     background-color: cornflowerblue;
+    z-index: 999;
     left: 0;
     bottom: 0;
     width: 100%;

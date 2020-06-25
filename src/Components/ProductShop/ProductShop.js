@@ -85,16 +85,19 @@ export default class ProductShop extends React.Component {
                 paddingRight: '10px',
                 paddingLeft: '20px',
             }}>
-                {this.props.loading ? <div style={{}}><Spinner/></div> : <>
-                    <div className={'view-horizontal-title'}
-                         style={{marginBottom: '15px'}}>Товары
-                    </div>
+                <div style={{}}>
+                    {this.props.loading ? <div style={{}}><Spinner/></div> : <>
+                        <div className={'view-horizontal-title'}
+                             style={{marginBottom: '15px'}}>Товары
+                        </div>
 
-                    <div className={'product-shop-list'} ref={this.productListRef}>
-                        {
-                            this.props.items.map((elem, index) => {
-                                return <div style={{marginBottom: '15px',}}
-                                            ref={this.productItemRef} onClick={() => this.props.setCurrentId(elem.id)}>
+                        <div className={'product-shop-list'} ref={this.productListRef}>
+                            {this.props.items.length > 0 ?
+                                this.props.items.map((elem, index) => {
+                                    return <div style={{marginBottom: '15px',}}
+                                                ref={this.productItemRef}
+                                                onClick={() => this.props.setCurrentId(elem.id)}>
+
                                         <ProductItem
                                             currentId={elem.id}
                                             selectedItems={this.props.selectedItems}
@@ -102,18 +105,21 @@ export default class ProductShop extends React.Component {
                                             imageUrl={elem.photo ? elem.photo : noImage}>
                                             <div>{elem.name}</div>
                                         </ProductItem>
+                                    </div>
+                                }) : <div style={{width: '100%', textAlign: 'center', paddingTop: '100px'}}>
+                                    Ни одного товара не найдено
                                 </div>
-                            })
-                        }
-                        {
-                            this.state.tempArray.map((elem, index) => {
-                                return <div style={{width: this.state.itemWidth}}></div>
-                            })
-                        }
-                    </div>
-                    {this.props.children}
-                </>
-                }
+                            }
+                            {
+                                this.state.tempArray.map((elem, index) => {
+                                    return <div style={{width: this.state.itemWidth}}></div>
+                                })
+                            }
+                        </div>
+                        {this.props.items.length > 0 ? this.props.children : null}
+                    </>
+                    }
+                </div>
             </div>
         )
     }

@@ -1,5 +1,6 @@
 .topic-bar-list{
     background-color: cornflowerblue;
+    transform-origin: top;
     left: 0;
     top: 30px;
     position: absolute;

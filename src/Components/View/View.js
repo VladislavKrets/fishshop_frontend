@@ -9,12 +9,29 @@ export default class View extends React.Component {
         super(props);
     }
 
+    onMouseOver = () => {
+        console.log('over')
+        if (this.props.setPointerEvents){
+            this.props.setPointerEvents(false);
+        }
+    }
+
+    onMouseOut = () => {
+        if (this.props.setPointerEvents){
+            this.props.setPointerEvents(true);
+        }
+    }
+
     render() {
         const showEpicBar = this.props.showEpicBar !== undefined && this.props.showEpicBar !== null ? this.props.showEpicBar : true;
         return (
             <div className={'view'}>
-                <NavBar current={this.props.current}/>
-                <div className={'mobile'} style={{height: '53px'}}></div>
+                {this.props.current === 'main' ? null :
+                    <NavBar current={this.props.current}/>
+                }
+                {this.props.current === 'main' ? null :
+                    <div className={'mobile'} style={{height: '53px'}}></div>
+                }
                 <Header style={this.props.headerAnimation ? {
                     transformOrigin: 'top left',
                     animation: 'panel 500ms ease-in-out',
@@ -24,7 +41,7 @@ export default class View extends React.Component {
                 {showEpicBar ?
                     <>
                         <div className={'mobile'} style={{height: '52px'}}></div>
-                        <EpicBar current={this.props.current}/>
+                        <EpicBar current={this.props.current} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}/>
                     </> : null
                 }
             </div>

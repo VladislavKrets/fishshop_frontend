@@ -133,7 +133,9 @@ export default class Basket extends React.Component {
                                                             this.changeElemCount(elem.id, -1)
                                                         }}>-
                                                         </div>
-                                                        <div style={{
+                                                        <div
+                                                            onClick={e => e.stopPropagation()}
+                                                            style={{
                                                             width: '30px',
                                                             backgroundColor: 'white',
                                                             border: '1px solid gray',
@@ -215,7 +217,7 @@ export default class Basket extends React.Component {
                                     }}>{'<'}</span>
                                     <span>
                                     {this.state.next ? parseInt(this.state.next.split('=')[1]) - 1
-                                        : this.state.previous ? parseInt(this.state.previous.split('=')[1]) + 1 : 1}
+                                        : Math.ceil(this.state.count / 50)}
                                         /
                                         {Math.ceil(this.state.count / 50)}
                                 </span>
