@@ -98,7 +98,7 @@ export default class Basket extends React.Component {
                             <div>
                                 {this.state.items.map((elem, index) => {
                                     return <InfoSection>
-                                        <div style={{display: 'flex', cursor: 'pointer'}} onClick={() => this.setCurrentId(elem.id)}>
+                                        <div style={{display: 'flex', cursor: 'pointer', justifyContent: 'space-between'}} onClick={() => this.setCurrentId(elem.id)}>
                                             <div>
                                                 <div>
                                                     <img className={'image basket-image'}
@@ -119,6 +119,7 @@ export default class Basket extends React.Component {
                                                 }}>
                                                     <div style={{
                                                         display: 'flex',
+                                                        justifyContent: 'center',
                                                         alignItems: 'center',
                                                     }}>
                                                         <div style={{
@@ -195,6 +196,7 @@ export default class Basket extends React.Component {
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div></div>
                                         </div>
                                     </InfoSection>
                                 })}

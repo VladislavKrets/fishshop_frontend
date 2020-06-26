@@ -9,10 +9,15 @@ export default class LeftTopicBarItem extends React.Component {
         this.state = {
             expandedClassName: ''
         }
+
+    }
+
+    componentDidMount() {
+        if (this.props.expand) this.expandFilter()
     }
 
     expandFilter = (e) => {
-        e.stopPropagation()
+        if (e) e.stopPropagation()
         if (this.state.expandedClassName) {
             this.setState({
                 expandedClassName: ''

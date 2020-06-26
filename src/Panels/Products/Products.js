@@ -306,6 +306,7 @@ export default class Products extends React.Component {
                                 }} onClick={this.reset}>Сбросить</span>
                                 </div>
                                 <LeftTopicBarItem switchMobileTopic={this.switchMobileTopic}
+                                                  expand={true}
                                                   switchMobileTopicNext={this.switchMobileTopicNext}
                                                   checked={this.state.topics[0].checked}
                                                   items={this.state.topics[0].children}
