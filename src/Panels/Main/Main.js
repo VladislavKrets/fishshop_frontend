@@ -6,6 +6,7 @@ import ProductItem from "../../Components/ProductItem/ProductItem";
 import background from '../../images/fish-background.jpeg'
 import NavBar from "../../Components/NavBar/NavBar";
 import {Link} from "react-router-dom";
+import logo from '../../images/logo.png'
 
 export default class Main extends React.Component {
     constructor(props) {
@@ -30,12 +31,83 @@ export default class Main extends React.Component {
                     paddingBottom: '40px',
                     backgroundSize: 'cover'
                 }}>
-                    <div className={'mobile'} style={{height: '53px'}}></div>
-                    <NavBar current={'main'} style={{opacity: this.state.isNavMouseOver ? null : 0.7,
+                    <div style={{height: '53px'}}></div>
+                    <NavBar current={'main'} style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        zIndex: 1,
+                        /*{
+                        opacity: this.state.isNavMouseOver ? null : 0.7,
                         transition: 'background-color 0.5s',
-                        backgroundColor: this.state.isNavMouseOver ? null : 'transparent'}}
+                        backgroundColor: this.state.isNavMouseOver ? null : 'transparent'
+                    }*/
+                    }}
                             onMouseOut={() => this.setState({isNavMouseOver: false})}
                             onMouseOver={() => this.setState({isNavMouseOver: true})}/>
+                    <div className={'desktop'} style={{
+                        backgroundColor: 'cornflowerblue',
+                    }}>
+                        <div style={{
+
+                            display: "flex",
+                            margin: '0 auto',
+                            width: '60%',
+                            padding: '20px 0',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}>
+                            <div>
+                                <img src={logo} style={{width: '150px', height: '150px'}}/>
+                            </div>
+                            <div>
+                                <div style={{
+                                    fontSize: '1.5em',
+                                    fontWeight: '700',
+                                    fontFamily: '\'Balsamiq Sans\', cursive, \'Arial\'',
+                                    color: 'white'
+                                }}>Все для рыбалки
+                                </div>
+                                <div style={{color: 'white'}}>Магазин товаров для рыбалки</div>
+                            </div>
+                            <div style={{color: 'white'}}>
+                                <div>+7(000)000-00-00</div>
+                                <div>Лен.область, Приозерский район </div>
+                                <div>п.Сосново, Ул Ленинградская 9б</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={'mobile'} style={{backgroundColor: 'cornflowerblue', padding: '0 5px', paddingBottom: '20px'}}>
+                        <div style={{
+
+                            display: "flex",
+                            padding: '20px 0',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}>
+                            <div>
+                                <img src={logo} style={{width: '150px', height: '150px'}}/>
+                            </div>
+                            <div>
+                                <div style={{
+                                    fontSize: '1.5em',
+                                    fontWeight: '700',
+                                    fontFamily: '\'Balsamiq Sans\', cursive, \'Arial\'',
+                                    color: 'white'
+                                }}>Все для рыбалки
+                                </div>
+                                <div style={{color: 'white'}}>Магазин товаров для рыбалки</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style={{color: 'white', textAlign: 'center'}}>
+                                <div>+7(000)000-00-00</div>
+                                <div>Лен.область, Приозерский район </div>
+                                <div>п.Сосново, Ул Ленинградская 9б</div>
+                            </div>
+                        </div>
+                    </div>
                     <InfoSection style={{
                         opacity: 0.7,
                         color: 'blue',
@@ -46,7 +118,7 @@ export default class Main extends React.Component {
                             <p>
                                 Говорить о нашем сайте, как о просто "Магазине рыболовных снастей",
                                 было бы неправильно. В нашем магазине "Все для рыбалки"
-                                рыболовные снасти у нас представлены в широчайшем
+                                рыболовные снасти представлены в широчайшем
                                 ассортименте. Однако, мы не останавливаемся только на продаже
                                 снастей, рыболовный интернет магазин и розничная сеть постоянно
                                 развиваются, ищут новые рыболовные товары, которые смогут занять
@@ -133,7 +205,8 @@ export default class Main extends React.Component {
                         borderRadius: '12px'
                     }}>
                         <div style={{textAlign: 'center'}}>
-                            <p style={{paddingBottom: '20px'}}>Как с нами связаться и где нас найти?</p>
+                            <p style={{paddingBottom: '20px'}}>Как с нами связаться и где нас
+                                найти?</p>
                             <p>
                                 <Link to={'/contacts/'} style={{
                                     textDecoration: 'none',

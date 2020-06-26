@@ -49,6 +49,7 @@ export default class MobileSearchTopic extends React.Component {
                         </div>
                     </div>
                     <div>{this.props.children}</div>
+                    <div className={'mobile'} style={{height: '52px'}}></div>
                 </div>
             </div>
         )
