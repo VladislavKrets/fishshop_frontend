@@ -7,19 +7,37 @@ import background from '../../images/fish-background.jpeg'
 import NavBar from "../../Components/NavBar/NavBar";
 import {Link} from "react-router-dom";
 import logo from '../../images/logo.png'
+import Spinner from "../../Components/Spinner/Spinner";
+import noImage from "../../icons/not-found.png";
+import axios from '../../api'
 
 export default class Main extends React.Component {
     constructor(props) {
         super(props);
-        const array = []
-        for (let i = 0; i < 12; i++) {
-            array.push(i)
-        }
         this.state = {
-            array: array,
+            bestsellers: [],
+            promotions: [],
+            bestsellersLoading: true,
+            promotionsLoading: true,
             isNavMouseOver: false
         }
     }
+
+    componentDidMount() {
+        axios.get('/items/bestsellers/').then(data => {
+            this.setState({
+                bestsellersLoading: false,
+                bestsellers: data.data
+            })
+        })
+        axios.get('/items/promotions/').then(data => {
+            this.setState({
+                promotionsLoading: false,
+                promotions: data.data
+            })
+        })
+    }
+
 
     render() {
         return (
@@ -73,12 +91,16 @@ export default class Main extends React.Component {
                             </div>
                             <div style={{color: 'white'}}>
                                 <div>+7(000)000-00-00</div>
-                                <div>Лен.область, Приозерский район </div>
+                                <div>Лен.область, Приозерский район</div>
                                 <div>п.Сосново, Ул Ленинградская 9б</div>
                             </div>
                         </div>
                     </div>
-                    <div className={'mobile'} style={{backgroundColor: 'cornflowerblue', padding: '0 5px', paddingBottom: '20px'}}>
+                    <div className={'mobile'} style={{
+                        backgroundColor: 'cornflowerblue',
+                        padding: '0 5px',
+                        paddingBottom: '20px'
+                    }}>
                         <div style={{
 
                             display: "flex",
@@ -103,7 +125,7 @@ export default class Main extends React.Component {
                         <div>
                             <div style={{color: 'white', textAlign: 'center'}}>
                                 <div>+7(000)000-00-00</div>
-                                <div>Лен.область, Приозерский район </div>
+                                <div>Лен.область, Приозерский район</div>
                                 <div>п.Сосново, Ул Ленинградская 9б</div>
                             </div>
                         </div>
@@ -144,15 +166,27 @@ export default class Main extends React.Component {
                     <HorizontalScroll title={'Товары недели'} id={'container1'}
                                       style={{opacity: 0.8, borderRadius: '12px'}}>
                         {
-                            this.state.array.map((elem, index) => {
-                                return <ProductItem
-                                    currentId={1}
-                                    selectedItems={this.props.selectedItems}
-                                    changeSelectedItems={this.props.changeSelectedItems}
-                                    imageUrl={'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg'}>
-                                    <div>Продукт {index + 1}</div>
-                                </ProductItem>
-                            })
+                            this.state.bestsellersLoading ?
+                                <Spinner style={{marginTop: '10px', width: '100%'}}/> :
+                                this.state.bestsellers.length === 0 ? <div style={{
+                                        height: '180px',
+                                        textAlign: 'center',
+                                        width: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                    Товары не найдены
+                                    </div> :
+                                    this.state.bestsellers.map((elem, index) => {
+                                        return <ProductItem
+                                            currentId={elem.id}
+                                            selectedItems={this.props.selectedItems}
+                                            changeSelectedItems={this.props.changeSelectedItems}
+                                            imageUrl={elem.photo ? elem.photo : noImage}>
+                                            <div>{elem.name}</div>
+                                        </ProductItem>
+                                    })
                         }
                     </HorizontalScroll>
                     <InfoSection style={{
@@ -187,15 +221,27 @@ export default class Main extends React.Component {
                     <HorizontalScroll title={'Акции'} id={'container2'}
                                       style={{opacity: 0.8, borderRadius: '12px'}}>
                         {
-                            this.state.array.map((elem, index) => {
-                                return <ProductItem
-                                    currentId={2}
-                                    selectedItems={this.props.selectedItems}
-                                    changeSelectedItems={this.props.changeSelectedItems}
-                                    imageUrl={'https://miro.medium.com/max/1200/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg'}>
-                                    Продукт {index + 1} fefefeferfefdddwd
-                                </ProductItem>
-                            })
+                            this.state.promotionsLoading ?
+                                <Spinner style={{marginTop: '10px', width: '100%'}}/> :
+                                this.state.promotions.length === 0 ? <div style={{
+                                        height: '180px',
+                                        textAlign: 'center',
+                                        width: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        Товары не найдены
+                                    </div> :
+                                this.state.promotions.map((elem, index) => {
+                                    return <ProductItem
+                                        currentId={elem.id}
+                                        selectedItems={this.props.selectedItems}
+                                        changeSelectedItems={this.props.changeSelectedItems}
+                                        imageUrl={elem.photo ? elem.photo : noImage}>
+                                        <div>{elem.name}</div>
+                                    </ProductItem>
+                                })
                         }
                     </HorizontalScroll>
                     <InfoSection style={{
