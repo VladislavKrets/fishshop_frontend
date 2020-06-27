@@ -10,6 +10,8 @@ import logo from '../../images/logo.png'
 import Spinner from "../../Components/Spinner/Spinner";
 import noImage from "../../icons/not-found.png";
 import axios from '../../api'
+import backArrow from "../../icons/back-arrow.svg";
+import CurrentProduct from "../CurrentProduct/CurrentProduct";
 
 export default class Main extends React.Component {
     constructor(props) {
@@ -19,7 +21,8 @@ export default class Main extends React.Component {
             promotions: [],
             bestsellersLoading: true,
             promotionsLoading: true,
-            isNavMouseOver: false
+            isNavMouseOver: false,
+            currentId: null
         }
     }
 
@@ -38,9 +41,18 @@ export default class Main extends React.Component {
         })
     }
 
+    setCurrentId = (id) => {
+        if (id !== null){
+            window.history.pushState({}, 'product', `/products/${id}/`)
+        }
+        this.setState({
+            currentId: id
+        })
+    }
 
     render() {
         return (
+            !this.state.currentId ?
             <View current={'main'} title={'Главная'}>
                 <div style={{
                     backgroundImage: `url(${background})`,
@@ -179,13 +191,13 @@ export default class Main extends React.Component {
                                     Товары не найдены
                                     </div> :
                                     this.state.bestsellers.map((elem, index) => {
-                                        return <ProductItem
+                                        return <div onClick={() => this.setCurrentId(elem.id)}><ProductItem
                                             currentId={elem.id}
                                             selectedItems={this.props.selectedItems}
                                             changeSelectedItems={this.props.changeSelectedItems}
                                             imageUrl={elem.photo ? elem.photo : noImage}>
                                             <div>{elem.name}</div>
-                                        </ProductItem>
+                                        </ProductItem></div>
                                     })
                         }
                     </HorizontalScroll>
@@ -234,13 +246,13 @@ export default class Main extends React.Component {
                                         Товары не найдены
                                     </div> :
                                 this.state.promotions.map((elem, index) => {
-                                    return <ProductItem
+                                    return <div onClick={() => this.setCurrentId(elem.id)}><ProductItem
                                         currentId={elem.id}
                                         selectedItems={this.props.selectedItems}
                                         changeSelectedItems={this.props.changeSelectedItems}
                                         imageUrl={elem.photo ? elem.photo : noImage}>
                                         <div>{elem.name}</div>
-                                    </ProductItem>
+                                    </ProductItem></div>
                                 })
                         }
                     </HorizontalScroll>
@@ -266,7 +278,28 @@ export default class Main extends React.Component {
                         </div>
                     </InfoSection>
                 </div>
-            </View>
+            </View> : <View current={'products'} showEpicBar={false} headerAnimation={true} title={<div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '100%',
+                        fontSize: 'inherit',
+                        font: 'inherit',
+                        fontWeight: 'inherit'
+                    }}>
+                    <div onClick={() => this.setCurrentId(null)} style={{paddingLeft: '12px'}}>
+                        <img src={backArrow} style={{
+                            width: '28px',
+                            height: '28px'
+                        }}/>
+                    </div>
+                    <span>Товар</span>
+                    <div style={{width: '40px'}}/>
+                </div>}>
+                    <CurrentProduct id={this.state.currentId} selectedItems={this.props.selectedItems}
+                                    changeSelectedItems={this.props.changeSelectedItems} setCurrentId={this.setCurrentId}/>
+                </View>
         )
     }
 }
