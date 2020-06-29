@@ -103,6 +103,7 @@ export default class ProductShop extends React.Component {
                                             selectedItems={this.props.selectedItems}
                                             changeSelectedItems={this.props.changeSelectedItems}
                                             imageUrl={elem.photo ? elem.photo : noImage}>
+                                            <div>Цена: {elem.price ? elem.price + " руб." : "не указана"}</div>
                                             <div>{elem.name}</div>
                                         </ProductItem>
                                     </div>

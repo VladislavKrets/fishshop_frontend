@@ -56,7 +56,7 @@ export default class ProductItem extends React.Component {
                         </span>
                         }
                     </div>
-                    <div style={{wordBreak: 'break-word'}}>{this.props.children}</div>
+                    <div style={{wordBreak: 'break-word', overflow: 'hidden', textOverflow: 'ellipsis', maxHeight: '74px'}}>{this.props.children}</div>
                 </div>
             </div>
         )

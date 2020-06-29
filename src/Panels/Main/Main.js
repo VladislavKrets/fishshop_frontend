@@ -196,7 +196,8 @@ export default class Main extends React.Component {
                                             selectedItems={this.props.selectedItems}
                                             changeSelectedItems={this.props.changeSelectedItems}
                                             imageUrl={elem.photo ? elem.photo : noImage}>
-                                            <div>{elem.name}</div>
+                                            <div>Цена: {elem.price ? elem.price + " руб." : "не указана"}</div>
+                                            <div style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{elem.name}</div>
                                         </ProductItem></div>
                                     })
                         }
@@ -251,7 +252,8 @@ export default class Main extends React.Component {
                                         selectedItems={this.props.selectedItems}
                                         changeSelectedItems={this.props.changeSelectedItems}
                                         imageUrl={elem.photo ? elem.photo : noImage}>
-                                        <div>{elem.name}</div>
+                                        <div>Цена: {elem.price ? elem.price + " руб." : "не указана"}</div>
+                                        <div style={{overflow: 'hidden', textOverflow: 'ellipsis',}}>{elem.name}</div>
                                     </ProductItem></div>
                                 })
                         }

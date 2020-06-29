@@ -67,7 +67,11 @@ export default class CurrentProduct extends React.Component {
                                  style={{width: '300px', height: '300px', borderRadius: '50%'}}
                                  src={this.state.product.photo ? this.state.product.photo : notFound}/>
                             {this.props.selectedItems.map(x => x.id).includes(this.props.id) ?
-                                <div style={{padding: '10px 0', display: 'flex', justifyContent: 'center'}}>
+                                <div style={{
+                                    padding: '10px 0',
+                                    display: 'flex',
+                                    justifyContent: 'center'
+                                }}>
                                     <div onClick={e => {
                                         e.stopPropagation();
                                         this.removeFromBasket();
@@ -90,7 +94,11 @@ export default class CurrentProduct extends React.Component {
                                         </div>
                                     </div>
                                 </div> :
-                                <div style={{padding: '10px 0', display: 'flex', justifyContent: 'center'}}>
+                                <div style={{
+                                    padding: '10px 0',
+                                    display: 'flex',
+                                    justifyContent: 'center'
+                                }}>
                                     <div onClick={e => {
                                         e.stopPropagation();
                                         this.addToBasket();
@@ -115,7 +123,12 @@ export default class CurrentProduct extends React.Component {
                             }
                         </div>
                         <div style={{flexGrow: '1', padding: '10px 12px', textAlign: 'center'}}>
-                            КАКОЕ-ТО ОПИСАНИЕ ЫЫЫЫЫЫЫЫЫ АААААААААААААА
+                            <div
+                                style={{textAlign: 'left'}}>
+                                <b>Цена{this.state.product.price && this.state.product.unit && ` за ${this.state.product.unit}`}:
+                                </b> {this.state.product.price ? this.state.product.price + " руб." : "Не указана"}</div>
+                            <div style={{textAlign: 'left'}}><b>Описание:</b></div>
+                            <div>{this.state.product.description ? this.state.product.description : "Не указано"}</div>
                         </div>
                     </div>
                 </div>

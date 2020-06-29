@@ -79,7 +79,7 @@ export default class Basket extends React.Component {
     }
 
     setCurrentId = (id) => {
-        if (id !== null){
+        if (id !== null) {
             window.history.pushState({}, 'product', `/products/${id}/`)
         }
         this.setState({
@@ -88,126 +88,163 @@ export default class Basket extends React.Component {
     }
 
     render() {
+        let totalSum = 0;
+        if (this.state.items.length > 0)
+            this.props.selectedItems.forEach((x, index) => {
+                const price = this.state.items.filter(elem => elem.id === x.id)[0].price;
+                if (price) {
+                    totalSum += price * x.count;
+                }
+            })
         return (
             !this.state.currentId ? <View current={'basket'} title={'Корзина'}>
-                {this.state.loading ? <Spinner/> :
-                    <>
-                        {this.props.selectedItems.length === 0 ?
-                            <div style={{marginTop: '50px', textAlign: 'center'}}>Ни одного товара
-                                еще не добавлено</div> :
-                            <div>
-                                {this.state.items.map((elem, index) => {
-                                    return <InfoSection>
-                                        <div style={{display: 'flex', cursor: 'pointer', justifyContent: 'space-between'}} onClick={() => this.setCurrentId(elem.id)}>
-                                            <div>
-                                                <div>
-                                                    <img className={'image basket-image'}
-                                                         src={elem.photo ? elem.photo : notFound}/>
-                                                </div>
-                                                <div style={{
-                                                    textAlign: 'center',
-                                                    fontFamily: "'Balsamiq Sans', cursive, 'Arial'",
-                                                    color: 'cornflowerblue', fontWeight: 'bold'
-                                                }}>
-                                                    {elem.name}
-                                                </div>
-                                            </div>
-                                            <div style={{paddingLeft: '20px', paddingTop: '20px',}}>
+                    {this.state.loading ? <Spinner/> :
+                        <>
+                            {this.props.selectedItems.length === 0 ?
+                                <div style={{marginTop: '50px', textAlign: 'center'}}>Ни одного товара
+                                    еще не добавлено</div> :
+                                <div>
+                                    <div style={{
+                                        textAlign: 'center',
+                                        fontSize: '1.5em',
+                                        fontWeight: 800,
+                                        marginTop: '40px',
+                                    }}>
+                                        Общая сумма: {totalSum} руб.
+                                    </div>
+                                    {
+                                        this.state.items.map((elem, index) => {
+                                            return <InfoSection>
                                                 <div style={{
                                                     display: 'flex',
-                                                    justifyContent: 'center'
-                                                }}>
-                                                    <div style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                    }}>
-                                                        <div style={{
-                                                            padding: '5px 12px',
-                                                            backgroundColor: 'cornflowerblue',
-                                                            color: 'white',
-                                                            borderRadius: '5px',
-                                                            marginRight: '10px',
-                                                            cursor: 'pointer'
-                                                        }} onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            this.changeElemCount(elem.id, -1)
-                                                        }}>-
+                                                    cursor: 'pointer',
+                                                    justifyContent: 'space-between'
+                                                }} onClick={() => this.setCurrentId(elem.id)}>
+                                                    <div>
+                                                        <div>
+                                                            <img className={'image basket-image'}
+                                                                 src={elem.photo ? elem.photo : notFound}/>
                                                         </div>
-                                                        <div
-                                                            onClick={e => e.stopPropagation()}
-                                                            style={{
-                                                            width: '30px',
-                                                            backgroundColor: 'white',
-                                                            border: '1px solid gray',
-                                                            borderRadius: '7px',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            padding: '5px',
-                                                            height: '20px'
+                                                        <div style={{
+                                                            textAlign: 'center',
+                                                            fontFamily: "'Balsamiq Sans', cursive, 'Arial'",
+                                                            color: 'cornflowerblue', fontWeight: 'bold'
                                                         }}>
-                                                            <input disabled={true} style={{
-                                                                background: 'none',
-                                                                outline: 'none',
-                                                                border: 'none',
-                                                                width: '100%'
-                                                            }}
-                                                                   value={this.props.selectedItems.filter(x => x.id === elem.id)[0].count}
-                                                                   type={'text'}/></div>
-                                                        <div style={{
-                                                            padding: '5px 10px',
-                                                            backgroundColor: 'cornflowerblue',
-                                                            color: 'white',
-                                                            borderRadius: '5px',
-                                                            marginLeft: '10px',
-                                                            cursor: 'pointer'
-                                                        }}
-                                                             onClick={(e) => {
-                                                                 e.stopPropagation();
-                                                                 this.changeElemCount(elem.id, 1)
-                                                             }}>+
+                                                            {elem.name}
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div style={{display: 'flex', justifyContent: 'center', paddingTop: '40px'}}>
-                                                    <div className={'basket-delete-button'}
-                                                         onClick={e => {
-                                                             e.stopPropagation();
-                                                             this.removeFromBasket(elem.id);
-                                                         }} style={{
-                                                        backgroundColor: 'red',
-                                                        padding: '10px 10px',
-                                                        borderRadius: '5px',
-                                                        color: 'white',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        cursor: 'pointer',
+                                                    <div style={{
+                                                        paddingLeft: '20px',
+                                                        paddingTop: '20px',
                                                     }}>
-                                                        <img src={trashIcon}
-                                                             style={{
-                                                                 width: '22px',
-                                                                 height: '22px'
-                                                             }}/>
                                                         <div style={{
-                                                            lineHeight: '25px',
-                                                            paddingLeft: '10px'
-                                                        }}>Удалить <span className={'desktop'}>из корзины</span>
+                                                            textAlign: 'center',
+                                                            paddingBottom: '15px'
+                                                        }}>
+                                                            <b>Цена:</b> {elem.price ?
+                                                            elem.price * this.props.selectedItems.filter(x => x.id === elem.id)[0].count + " руб."
+                                                            : "не указана"}
+                                                        </div>
+                                                        <div style={{
+                                                            display: 'flex',
+                                                            justifyContent: 'center'
+                                                        }}>
+                                                            <div style={{
+                                                                display: 'flex',
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                            }}>
+                                                                <div style={{
+                                                                    padding: '5px 12px',
+                                                                    backgroundColor: 'cornflowerblue',
+                                                                    color: 'white',
+                                                                    borderRadius: '5px',
+                                                                    marginRight: '10px',
+                                                                    cursor: 'pointer'
+                                                                }} onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    this.changeElemCount(elem.id, -1)
+                                                                }}>-
+                                                                </div>
+                                                                <div
+                                                                    onClick={e => e.stopPropagation()}
+                                                                    style={{
+                                                                        width: '50px',
+                                                                        backgroundColor: 'white',
+                                                                        border: '1px solid gray',
+                                                                        borderRadius: '7px',
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        padding: '5px',
+                                                                        height: '20px'
+                                                                    }}>
+                                                                    <input disabled={true} style={{
+                                                                        background: 'none',
+                                                                        outline: 'none',
+                                                                        border: 'none',
+                                                                        width: '100%'
+                                                                    }}
+                                                                           value={this.props.selectedItems.filter(x => x.id === elem.id)[0].count
+                                                                           + `${elem.unit}`}
+                                                                           type={'text'}/></div>
+                                                                <div style={{
+                                                                    padding: '5px 10px',
+                                                                    backgroundColor: 'cornflowerblue',
+                                                                    color: 'white',
+                                                                    borderRadius: '5px',
+                                                                    marginLeft: '10px',
+                                                                    cursor: 'pointer'
+                                                                }}
+                                                                     onClick={(e) => {
+                                                                         e.stopPropagation();
+                                                                         this.changeElemCount(elem.id, 1)
+                                                                     }}>+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div style={{
+                                                            display: 'flex',
+                                                            justifyContent: 'center',
+                                                            paddingTop: '40px'
+                                                        }}>
+                                                            <div className={'basket-delete-button'}
+                                                                 onClick={e => {
+                                                                     e.stopPropagation();
+                                                                     this.removeFromBasket(elem.id);
+                                                                 }} style={{
+                                                                backgroundColor: 'red',
+                                                                padding: '10px 10px',
+                                                                borderRadius: '5px',
+                                                                color: 'white',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                cursor: 'pointer',
+                                                            }}>
+                                                                <img src={trashIcon}
+                                                                     style={{
+                                                                         width: '22px',
+                                                                         height: '22px'
+                                                                     }}/>
+                                                                <div style={{
+                                                                    lineHeight: '25px',
+                                                                    paddingLeft: '10px'
+                                                                }}>Удалить <span className={'desktop'}>из корзины</span>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    <div></div>
                                                 </div>
-                                            </div>
-                                            <div></div>
-                                        </div>
-                                    </InfoSection>
-                                })}
-                                <div style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    color: 'cornflowerblue',
-                                    fontSize: '1.2em',
-                                    padding: '12px 50px'
-                                }}>
+                                            </InfoSection>
+                                        })}
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        color: 'cornflowerblue',
+                                        fontSize: '1.2em',
+                                        padding: '12px 50px'
+                                    }}>
                                 <span
                                     onClick={this.state.previous ? () => {
                                         this.loadData(null, this.state.previous.replace('http://', 'https://'))
@@ -217,49 +254,52 @@ export default class Basket extends React.Component {
                                         transform: 'scaleX(0.6)',
                                         cursor: 'pointer'
                                     }}>{'<'}</span>
-                                    <span>
+                                        <span>
                                     {this.state.next ? parseInt(this.state.next.split('=')[1]) - 1
                                         : Math.ceil(this.state.count / 50)}
-                                        /
-                                        {Math.ceil(this.state.count / 50)}
+                                            /
+                                            {Math.ceil(this.state.count / 50)}
                                 </span>
-                                    <span
-                                        onClick={this.state.next ? () => {
-                                            this.loadData(null, this.state.next.replace('http://', 'https://'))
-                                        } : null}
-                                        style={{
-                                            fontSize: '2em',
-                                            transform: 'scaleX(0.6)',
-                                            cursor: 'pointer'
-                                        }}>{'>'}
+                                        <span
+                                            onClick={this.state.next ? () => {
+                                                this.loadData(null, this.state.next.replace('http://', 'https://'))
+                                            } : null}
+                                            style={{
+                                                fontSize: '2em',
+                                                transform: 'scaleX(0.6)',
+                                                cursor: 'pointer'
+                                            }}>{'>'}
                                 </span>
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                    </>
-                }
-            </View> : <View current={'basket'} showEpicBar={false} headerAnimation={true} title={<div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    width: '100%',
-                    fontSize: 'inherit',
-                    font: 'inherit',
-                    fontWeight: 'inherit'
-                }}>
-                <div onClick={() => this.setCurrentId(null)} style={{paddingLeft: '12px'}}>
-                    <img src={backArrow} style={{
-                        width: '28px',
-                        height: '28px'
-                    }}/>
-                </div>
-                <span>Товар</span>
-                <div style={{width: '40px'}}/>
-            </div>}>
-                <CurrentProduct id={this.state.currentId} selectedItems={this.props.selectedItems}
-                                changeSelectedItems={this.props.changeSelectedItems} setCurrentId={this.setCurrentId}/>
-            </View>
+                            }
+                        </>
+                    }
+                </View> :
+                <View current={'basket'} showEpicBar={false} headerAnimation={true} title={<div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '100%',
+                        fontSize: 'inherit',
+                        font: 'inherit',
+                        fontWeight: 'inherit'
+                    }}>
+                    <div onClick={() => this.setCurrentId(null)} style={{paddingLeft: '12px'}}>
+                        <img src={backArrow} style={{
+                            width: '28px',
+                            height: '28px'
+                        }}/>
+                    </div>
+                    <span>Товар</span>
+                    <div style={{width: '40px'}}/>
+                </div>}>
+                    <CurrentProduct id={this.state.currentId}
+                                    selectedItems={this.props.selectedItems}
+                                    changeSelectedItems={this.props.changeSelectedItems}
+                                    setCurrentId={this.setCurrentId}/>
+                </View>
         )
     }
 }
