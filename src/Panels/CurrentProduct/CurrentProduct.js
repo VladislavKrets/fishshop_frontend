@@ -126,9 +126,17 @@ export default class CurrentProduct extends React.Component {
                             <div
                                 style={{textAlign: 'left'}}>
                                 <b>Цена{this.state.product.price && this.state.product.unit && ` за ${this.state.product.unit}`}:
-                                </b> {this.state.product.price ? this.state.product.price + " руб." : "Не указана"}</div>
+                                </b> {this.state.product.price ? this.state.product.price + " руб." : "Не указана"}
+                            </div>
                             <div style={{textAlign: 'left'}}><b>Описание:</b></div>
-                            <div>{this.state.product.description ? this.state.product.description : "Не указано"}</div>
+                            <div>
+                                {this.state.product.description ? null : "Не указано"}
+                            </div>
+                            <div
+                                style={{textAlign: 'left'}}
+                                dangerouslySetInnerHTML={{__html: this.state.product.description
+                                        ? this.state.product.description : null}}>
+                            </div>
                         </div>
                     </div>
                 </div>

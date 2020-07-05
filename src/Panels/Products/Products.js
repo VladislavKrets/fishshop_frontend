@@ -343,7 +343,7 @@ export default class Products extends React.Component {
                                 </span>
                                         <span
                                             onClick={this.state.next ? () => {
-                                                this.getProducts(this.state.next.replace('http://', 'https://'))
+                                                this.getProducts(this.state.next/*.replace('http://', 'https://')*/)
                                             } : null}
                                             style={{
                                                 fontSize: '2em',

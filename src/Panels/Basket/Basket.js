@@ -104,14 +104,14 @@ export default class Basket extends React.Component {
                                 <div style={{marginTop: '50px', textAlign: 'center'}}>Ни одного товара
                                     еще не добавлено</div> :
                                 <div>
-                                    <div style={{
+                                    <div className={'basket-total-sum'} style={{
                                         textAlign: 'center',
                                         fontSize: '1.5em',
                                         fontWeight: 800,
-                                        marginTop: '40px',
                                     }}>
-                                        Общая сумма: {totalSum} руб.
+                                        Итоговая сумма: {totalSum} руб.
                                     </div>
+                                    <div className={'basket-elem-list'}>
                                     {
                                         this.state.items.map((elem, index) => {
                                             return <InfoSection>
@@ -125,7 +125,7 @@ export default class Basket extends React.Component {
                                                             <img className={'image basket-image'}
                                                                  src={elem.photo ? elem.photo : notFound}/>
                                                         </div>
-                                                        <div style={{
+                                                        <div className={'basket-elem-name'} style={{
                                                             textAlign: 'center',
                                                             fontFamily: "'Balsamiq Sans', cursive, 'Arial'",
                                                             color: 'cornflowerblue', fontWeight: 'bold'
@@ -137,14 +137,6 @@ export default class Basket extends React.Component {
                                                         paddingLeft: '20px',
                                                         paddingTop: '20px',
                                                     }}>
-                                                        <div style={{
-                                                            textAlign: 'center',
-                                                            paddingBottom: '15px'
-                                                        }}>
-                                                            <b>Цена:</b> {elem.price ?
-                                                            elem.price * this.props.selectedItems.filter(x => x.id === elem.id)[0].count + " руб."
-                                                            : "не указана"}
-                                                        </div>
                                                         <div style={{
                                                             display: 'flex',
                                                             justifyContent: 'center'
@@ -184,8 +176,7 @@ export default class Basket extends React.Component {
                                                                         border: 'none',
                                                                         width: '100%'
                                                                     }}
-                                                                           value={this.props.selectedItems.filter(x => x.id === elem.id)[0].count
-                                                                           + `${elem.unit}`}
+                                                                           value={this.props.selectedItems.filter(x => x.id === elem.id)[0].count}
                                                                            type={'text'}/></div>
                                                                 <div style={{
                                                                     padding: '5px 10px',
@@ -235,8 +226,32 @@ export default class Basket extends React.Component {
                                                     </div>
                                                     <div></div>
                                                 </div>
+                                                <div className={'basket-element-price-wrapper'}>
+                                                <div className={'basket-element-price'}>
+                                                    <div>
+                                                    <b>Цена:</b> {elem.price ?
+                                                    elem.price + " руб."
+                                                    : "не указана"}
+                                                    </div>
+                                                    <div>
+                                                        <b>Количество: </b> {this.props.selectedItems.filter(x => x.id === elem.id)[0].count}
+                                                    </div>
+                                                    <div>
+                                                        <b>Сумма: </b> {elem.price ?
+                                                        elem.price * this.props.selectedItems.filter(x => x.id === elem.id)[0].count + " руб."
+                                                        : "не указана"}
+                                                    </div>
+                                                </div>
+                                                </div>
                                             </InfoSection>
                                         })}
+                                    </div>
+                                    <div className={'bottom-basket-sum'} style={{
+                                        textAlign: 'right',
+                                        paddingRight: '22px'
+                                    }}>
+                                        <b>Итоговая сумма <span className={'desktop'}>по всем наименованиям</span>: </b>{totalSum} руб.
+                                    </div>
                                     <div style={{
                                         display: 'flex',
                                         justifyContent: 'space-between',
